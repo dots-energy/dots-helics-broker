@@ -1,5 +1,6 @@
 import helics as h
 import os
+from Logger import LOGGER
 
 MS_TO_BROKER_DISCONNECT = 600000
 
@@ -11,7 +12,9 @@ def main():
     broker = h.helicsCreateBroker("zmq", "helics_broker_esdl", f"-f {amount_of_esdl_message_federates} --loglevel=debug --ipv4 --timeout='60s' --brokerport={broker_port} --port={broker_port}")
     broker.wait_for_disconnect(MS_TO_BROKER_DISCONNECT)
 
-    broker = h.helicsCreateBroker("zmq", "helics_broker_co_simulation", f"-f {amount_of_federates} --loglevel=debug --ipv4 --timeout='60s' --brokerport={broker_port} --port={broker_port}")
+    LOGGER.info("Start broker with global time")
+
+    broker = h.helicsCreateBroker("zmq", "helics_broker_co_simulation", f"-f {amount_of_federates} --loglevel=debug --ipv4 --timeout='60s' --brokerport={broker_port} --port={broker_port} --globaltime")
     broker.wait_for_disconnect(MS_TO_BROKER_DISCONNECT)
 
 
