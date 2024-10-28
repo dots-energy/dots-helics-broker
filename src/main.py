@@ -2,7 +2,7 @@ import helics as h
 import os
 from Logger import LOGGER
 
-MS_TO_BROKER_DISCONNECT = 600000
+MS_TO_BROKER_DISCONNECT = 3600000 # 1 Hour
 
 def main():
     amount_of_federates = os.getenv("AMOUNT_OF_FEDERATES", "2")
