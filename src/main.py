@@ -1,3 +1,4 @@
+from queue import Queue
 from threading import Thread
 import helics as h
 import os
@@ -23,14 +24,14 @@ class HelicsInitalizationFederateExecutor:
         h.helicsFederateInfoSetCoreType(federate_info, h.HelicsCoreType.ZMQ)
         h.helicsFederateInfoSetIntegerProperty(federate_info, h.HelicsProperty.INT_LOG_LEVEL, h.HelicsLogLevel.NO_PRINT)
         return federate_info
-    
+
     def init_federate(self) -> tuple[h.HelicsMessageFederate, h.HelicsEndpoint]:
         federate_info = self.init_message_federate_info()
         message_federate = h.helicsCreateMessageFederate(self.federate_name, federate_info)
         message_enpoint = h.helicsFederateRegisterEndpoint(message_federate, "broker_endpoint_amount_of_calculations", h.HelicsDataType.INT.name)
         return message_federate, message_enpoint 
-    
-    def start_federate_for_amount_of_calculations(self):
+
+    def start_federate_for_amount_of_calculations(self) -> int:
         federate, endpoint = self.init_federate()
         h.helicsFederateEnterExecutingMode(federate)
         total_amount_of_calculations = 0
@@ -41,15 +42,18 @@ class HelicsInitalizationFederateExecutor:
         return total_amount_of_calculations
 
 def main():
-    amount_of_federates = os.getenv("AMOUNT_OF_FEDERATES", "2") + 1
     broker_port = os.getenv("HELICS_BROKER_PORT", "30000")
     amount_of_esdl_message_federates = int(os.getenv("AMOUNT_OF_ESDL_MESSAGE_FEDERATES", "2"))
-    
 
-    start_helics_broker("helics_broker_initialization", amount_of_esdl_message_federates, broker_port)
+    federate_executor = HelicsInitalizationFederateExecutor(int(broker_port), "initialization_federate")
+
+    broker_thread = Thread(target=start_helics_broker, args=("helics_broker_initialization", amount_of_esdl_message_federates, broker_port))
+    broker_thread.start()
+
+    amount_of_federates = federate_executor.start_federate_for_amount_of_calculations()
+    broker_thread.join()
 
     start_helics_broker("helics_broker_co_simulation", amount_of_federates, broker_port)
-
 
 
 if __name__ == "__main__":
