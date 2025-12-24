@@ -1,7 +1,7 @@
 import logging
 
-LOG_LEVEL = 'INFO'
-LOGGER = logging.getLogger('CS-Logger')
+LOG_LEVEL = 'DEBUG'
+LOGGER = logging.getLogger('Broker-Logger')
 LOGGER.setLevel(LOG_LEVEL)
 
 logging.basicConfig(

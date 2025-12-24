@@ -38,6 +38,7 @@ class HelicsInitalizationFederateExecutor:
         while h.helicsFederateRequestTime(federate, h.HELICS_TIME_MAXTIME) != h.HELICS_TIME_MAXTIME:
             if h.helicsEndpointHasMessage(endpoint):
                 additional_amount_of_calculations = int(h.helicsMessageGetString(h.helicsEndpointGetMessage(endpoint)))
+                LOGGER.debug(f"Received amount of calculations message from endpoint: {additional_amount_of_calculations}")
                 total_amount_of_calculations += int(additional_amount_of_calculations)
         return total_amount_of_calculations
 
