@@ -43,7 +43,7 @@ class HelicsInitalizationFederateExecutor:
 
 def main():
     broker_port = os.getenv("HELICS_BROKER_PORT", "30000")
-    amount_of_esdl_message_federates = int(os.getenv("AMOUNT_OF_ESDL_MESSAGE_FEDERATES", "2"))
+    amount_of_esdl_message_federates = int(os.getenv("AMOUNT_OF_ESDL_MESSAGE_FEDERATES", "2")) + 1
 
     federate_executor = HelicsInitalizationFederateExecutor(int(broker_port), "initialization_federate")
 
