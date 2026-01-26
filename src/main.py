@@ -8,7 +8,7 @@ MS_TO_BROKER_DISCONNECT = 7200000 # 2 Hours
 
 def start_helics_broker(broker_name: str, amount_of_federates: int, broker_port: str):
     LOGGER.info(f"Starting broker {broker_name} with {amount_of_federates} federates on port {broker_port}")
-    broker = h.helicsCreateBroker("zmq", broker_name, f"-f {amount_of_federates} --loglevel=debug --ipv4 --timeout='60s' --brokerport={broker_port} --port={broker_port} --globaltime")
+    broker = h.helicsCreateBroker("zmq", broker_name, f"-f {amount_of_federates} --loglevel=trace --ipv4 --timeout='60s' --brokerport={broker_port} --port={broker_port} --globaltime")
     broker.wait_for_disconnect(MS_TO_BROKER_DISCONNECT)
     LOGGER.info(f"Started broker {broker_name} with {amount_of_federates} federates on port {broker_port}")
 
@@ -41,6 +41,8 @@ class HelicsInitalizationFederateExecutor:
                 additional_amount_of_calculations = int(h.helicsMessageGetString(h.helicsEndpointGetMessage(endpoint)))
                 LOGGER.debug(f"Received amount of calculations message from endpoint: {additional_amount_of_calculations}")
                 total_amount_of_calculations += int(additional_amount_of_calculations)
+        h.helicsFederateDisconnect(federate)
+        h.helicsFederateDestroy(federate)
         return total_amount_of_calculations
 
 def main():
