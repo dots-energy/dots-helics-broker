@@ -50,7 +50,7 @@ def main():
     broker_exec_port = os.getenv("HELICS_BROKER_EXEC_PORT", "30001")
     amount_of_initialization_message_federates = int(os.getenv("AMOUNT_OF_INITIALIZATION_MESSAGE_FEDERATES", "2")) + 1
 
-    federate_executor = HelicsInitalizationFederateExecutor(int(broker_port), "broker_initialization_federate")
+    federate_executor = HelicsInitalizationFederateExecutor(int(broker_init_port), "broker_initialization_federate")
 
     broker_thread = Thread(target=start_helics_broker, args=("helics_broker_initialization", amount_of_initialization_message_federates, broker_init_port))
     broker_thread.start()
