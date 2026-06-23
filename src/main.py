@@ -4,7 +4,7 @@ import helics as h
 import os
 from Logger import LOGGER
 
-MS_TO_BROKER_DISCONNECT = 7200000 # 2 Hours
+MS_TO_BROKER_DISCONNECT = 28800000 # 8 Hours
 
 def start_helics_broker(broker_name: str, amount_of_federates: int, broker_port: str):
     LOGGER.info(f"Starting broker {broker_name} with {amount_of_federates} federates on port {broker_port}")
