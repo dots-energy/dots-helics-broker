@@ -46,18 +46,19 @@ class HelicsInitalizationFederateExecutor:
         return total_amount_of_calculations
 
 def main():
-    broker_port = os.getenv("HELICS_BROKER_PORT", "30000")
+    broker_init_port = os.getenv("HELICS_BROKER_INIT_PORT", "30000")
+    broker_exec_port = os.getenv("HELICS_BROKER_EXEC_PORT", "30001")
     amount_of_initialization_message_federates = int(os.getenv("AMOUNT_OF_INITIALIZATION_MESSAGE_FEDERATES", "2")) + 1
 
-    federate_executor = HelicsInitalizationFederateExecutor(int(broker_port), "broker_initialization_federate")
+    federate_executor = HelicsInitalizationFederateExecutor(int(broker_init_port), "broker_initialization_federate")
 
-    broker_thread = Thread(target=start_helics_broker, args=("helics_broker_initialization", amount_of_initialization_message_federates, broker_port))
+    broker_thread = Thread(target=start_helics_broker, args=("helics_broker_initialization", amount_of_initialization_message_federates, broker_init_port))
     broker_thread.start()
 
     amount_of_federates = federate_executor.start_federate_for_amount_of_calculations()
     broker_thread.join()
 
-    start_helics_broker("helics_broker_co_simulation", amount_of_federates, broker_port)
+    start_helics_broker("helics_broker_co_simulation", amount_of_federates, broker_exec_port)
 
 
 if __name__ == "__main__":
